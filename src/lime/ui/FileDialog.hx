@@ -85,7 +85,6 @@ class FileDialog #if android implements JNISafety #end
 	#if android
 	private static final OPEN_REQUEST_CODE:Int = JNI.createStaticField('org/haxe/lime/FileDialog', 'OPEN_REQUEST_CODE', 'I').get();
 	private static final SAVE_REQUEST_CODE:Int = JNI.createStaticField('org/haxe/lime/FileDialog', 'SAVE_REQUEST_CODE', 'I').get();
-	private static final DOCUMENT_TREE_REQUEST_CODE:Int = JNI.createStaticField('org/haxe/lime/FileDialog', 'DOCUMENT_TREE_REQUEST_CODE', 'I').get();
 	private static final RESULT_OK:Int = -1;
 	private var JNI_FILE_DIALOG:Dynamic = null;
 	#end
@@ -229,11 +228,9 @@ class FileDialog #if android implements JNISafety #end
 			case OPEN_MULTIPLE:
 				onCancel.dispatch();
 				return false;
-
-
 			case OPEN_DIRECTORY:
-				// onCancel.dispatch();
-				JNI.callMember(JNI.createMemberMethod('org/haxe/lime/FileDialog', 'openDocumentTree', '(Ljava/lang/String;)V'), JNI_FILE_DIALOG, [null]);
+				onCancel.dispatch();
+				return false;
 
 			case SAVE:
 				save(null, filter, defaultPath, title, 'application/octet-stream');
@@ -444,12 +441,6 @@ class FileDialog #if android implements JNISafety #end
 					try
 					{
 						onSave.dispatch(path);
-					}
-					catch (e:Dynamic) {}
-				case DOCUMENT_TREE_REQUEST_CODE:
-					try
-					{
-						onSelect.dispatch(uri);
 					}
 					catch (e:Dynamic) {}
 			}
